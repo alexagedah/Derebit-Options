@@ -1,27 +1,22 @@
 # Derebit-Options
 Produces plots of the implied volatility surface of crypto options on the Deribit exchange
 
-Underlying
-Instances of the Underlying class are used to represent the underlying contract for the options
+Options Chain
+Instances of this class are used to represent the options that are trading on an instrument.
+Originally I approaches this by having an option class and creating objects to represent each option but I think it makes
+more sense to have an object which represents the whole options chain. The main attribute of the OptionsChain object is the
+DataFrame containing all the information about the options.
 
-Option
-Instances of the Option class are used to represent the option contract
-
-- First interact with the Derebit API to get a DataFrame containing information on all the options contracts that are currently trading
-- Convert this DataFrame into a dictionry which has the expirations as keys and lists of all the options contracts as values. The options contracts are
+- First interact with the Derebit API to get a DataFrame containing information on all the options contracts that are currently trading. Get this DataFrame into the correct format so it can be passed into the OptionsChain constructor
 represented by Option objects.
-- We then use this list of options contract to plot the implied volatlity surface based on the mark price
+- We then use the OptionsChain class to calculate the implied volatility of the options using the bisection method and then
+plot the implied volatility surface
 
 
-Underlying Class Improvements
-- The underlying class can be extended to have attributes such as the bid, ask, mark and mid price. This would be needed for practical trading since 
-when we take long market positions, we value options using the bid and when we take short market positions we value options using the offer.
-
-Options Class Improvements
-- The Option class can be extended so that it can interact with a forecast volatility surface. We can then use this to calculate the theoretical value
-of options and then be able to trade the options
-- The risk-free rate input of the option is current 0 by default which is fine for Deribit. For other options contracts, we would need to be able to
-get the correct risk-free rate to use.
-- Currently the implied volatility is calculated using the bisection method. If this program was scaled up to deal with options on a vareity of instruments
-and on many exchanges, it may be necessary to use a faster converging numerical method. Note that the Newton Rahpson method was originally used however
-this did not converge in all cases
+Improvements
+- Binance recently added optionss. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
+constructor
+- Calculate the risk free rate on options properly. Derebit is easy since they all have a risk free rate of 0.
+- Calculate the implied volatility bid and ask and be able to plot the bid, ask and mark implied volatility surface
+- Have columns containing the bid, ask and mark price for the underlying contract. This is necessary for when I start trading
+since the bid/ask is used to value options depending on if you are taking a long market position or short market position
