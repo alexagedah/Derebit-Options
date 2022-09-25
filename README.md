@@ -1,4 +1,4 @@
-# Derebit-Options
+# DerebitOptions
 Produces plots of the implied volatility surface of crypto options on the Deribit exchange
 
 Instances of this class are used to represent the options that are trading on an instrument.
