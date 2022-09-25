@@ -1,7 +1,7 @@
 # Derebit-Options
 Produces plots of the implied volatility surface of crypto options on the Deribit exchange
 
-# Options Chain
+
 Instances of this class are used to represent the options that are trading on an instrument.
 Originally I approaches this by having an option class and creating objects to represent each option but I think it makes
 more sense to have an object which represents the whole options chain. The main attribute of the OptionsChain object is the
@@ -13,7 +13,7 @@ represented by Option objects.
 plot the implied volatility surface
 
 
-# Improvements
+# TODO/Improvements
 - Binance recently added optionss. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
 constructor
 - Calculate the risk free rate on options properly. Derebit is easy since they all have a risk free rate of 0.
