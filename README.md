@@ -1,5 +1,6 @@
 # Implied Volatility Surface
-Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques
+Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques.
+
 
 # Steps
 - First interact with the Derebit API to get a DataFrame containing information on all the options contracts that are currently trading. Get this DataFrame into the correct format so it can be passed into the OptionsChain constructor
