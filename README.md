@@ -1,5 +1,5 @@
 # Implied Volatility Surface
-Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques.
+Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques to determine the implied deterministic volatility function. 
 
 
 # Steps
@@ -16,8 +16,8 @@ DataFrame containing all the information about the options.
 
 # TODO/Improvements
 1. Calculate the implied volatility bid and ask and be able to plot the bid, ask and mark implied volatility surface.
-2. Have columns containing the bid, ask and mark price for the underlying contract. This is necessary for when I start trading since the bid/ask is used to value options depending on if you are taking a long market position or short market position
-3. Add a feature where we can specify our positioning in each option. We could then have something like the interface of the volcube simulator where we can view our position and overall exposure. W
-4. Be able to use a forecast volatility to determine the theoretical value of all the options. We can then compare the theoretical value to the market price and begin options trading!
-5. Binance recently added options. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
+2. Have columns containing the bid, ask and mark price for the underlying contract. This is necessary for when I start trading since the bid/ask is used to value options depending on if you are taking a long market position or short market position.
+3. Binance recently added options. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
 constructor (the same can be done with any other platform. Maybe interactive brokers next? This would involve generaling this to dividend paying stocks, American options and knowing how to deterime which risk free rate to use)
+4. Add a feature where we can specify our positioning in each option. We could then have something like the interface of the volcube simulator where we can view our position and overall exposure. 
+5. Be able to use a forecast volatility to determine the theoretical value of all the options. We can then compare the theoretical value to the market price and begin options trading!
