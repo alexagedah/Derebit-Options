@@ -1,12 +1,13 @@
 # DerebitOptions
-Produces plots of the implied volatility surface of crypto options on the Deribit exchange
+Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques
 
+# Steps
 - First interact with the Derebit API to get a DataFrame containing information on all the options contracts that are currently trading. Get this DataFrame into the correct format so it can be passed into the OptionsChain constructor
 represented by Option objects.
-- We then use the OptionsChain class to calculate the implied volatility of the options using the bisection method and then
-plot the implied volatility surface
+- Use the OptionsChain class to calculate the implied volatility of the options using the bisection method
+- Assume implied volatility is a function of the overall level of implied volatility, the strike of the option and the time to expiry. Machine learning techniques can then be used to relationship between implied volatility and these features. The implied volatility surface can then be plotted.
 
-
+# OptionChain
 Instances of this class are used to represent the options that are trading on an instrument.
 Originally I approaches this by having an option class and creating objects to represent each option but I think it makes
 more sense to have an object which represents the whole options chain. The main attribute of the OptionsChain object is the
