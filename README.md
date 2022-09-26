@@ -1,4 +1,4 @@
-# DerebitOptions
+# Implied Volatility Surface
 Plotting the implied volatility surface of options on the Deribit cryptocurrency derivatives exchange using machine learning techniques
 
 # Steps
