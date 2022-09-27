@@ -29,7 +29,7 @@ class OptionsChain():
 	"""
 	Instances of this class are used to represent the options that are trading on an instrument
 		Attributes:
-			instrument (string) : The name of the instrument the implied volatility surface
+			instrument (string) : The name of the instrument
 			style (string) : The style of the options
 			evaluation (datetime) : The date and time the options chain is being evaluated at
 			options_chain_df (DataFrame) : DataFrame containing information about the all options contracts. 
@@ -43,7 +43,7 @@ class OptionsChain():
 											Mark (float)
 											24H Vol (float)
 											Open Interest (float)
-											Time to Expiry (float) : The time to expiry in days
+											Time to Expiry (float) : The time to expiry in years
 											Risk Free Rate (float)
 											Forward Price (float)
 											Log Simple Moneyness (float) : log(F/K)
@@ -68,13 +68,15 @@ class OptionsChain():
 			PlotImpliedVolatilitySurface() : Produces a plot of the implied volatility surface based on the input implied deterministic volatility function
 			PlotImpliedVolatility() : Produces a 3D plot of the implied volatility of the options
 	"""
-	def __init__(self, options_chain_df):
+	def __init__(self, instrument, options_chain_df):
 		"""
 		Constructor for the ImpliedVolatilitySurface class
 			Parameters:
+				instrument (string) : The name of the instrument 
 				options_chain_df (DataFrame) : DataFrame containing information about the all options contracts
 				Expiration | Underlying Name | Underlying Price | Strike | Type | Bid | Ask | Mark | 24H Vol | Open Interest |
 		"""
+		self.instrument = instrument
 		self.style = "European"
 		self.options_chain_df = options_chain_df
 		self.evaluation = dt.datetime.now()
@@ -85,8 +87,6 @@ class OptionsChain():
 		self.CalculateImpliedVolatility()
 		self.FilterOptionsChain()
 		self.CreateDFWDVF()
-		self.PlotImpliedVolatilitySurface()
-
 		# writer = pd.ExcelWriter("chain.xlsx")
 		# self.options_chain_df.to_excel(writer,"Sheet 1")
 		# writer.save()
@@ -307,11 +307,11 @@ class OptionsChain():
 
 		fig = plt.figure()
 		ax1 = fig.add_subplot(1, 1, 1, projection = "3d")
-		ax1.set_title("Implied Volatility Surface")
+		ax1.set_title(f"{self.instrument} Implied Volatility Surface")
 		ax1.set_xlabel("Strike")
 		ax1.set_ylabel("Days to Expiry")
 		ax1.set_zlabel("Implied Volatility/%")
-		ax1.plot_surface(x,y,z1*100, color = "blue")
+		ax1.plot_surface(x,y*365.25,z1*100, color = "blue")
 		# ax1.scatter(strike_series,time_to_expiry_series,implied_volatility_series*100, color = "green")
 		plt.show()
 
@@ -324,11 +324,11 @@ class OptionsChain():
 		z = self.options_chain_df.loc[:,"Implied Volatility"]*100
 		fig = plt.figure()
 		ax1 = fig.add_subplot(1, 1, 1, projection = "3d")
-		ax1.set_title("Implied Volatility")
+		ax1.set_title(f"{self.instrument} Implied Volatility")
 		ax1.set_xlabel("Log Simple Moneyness")
 		ax1.set_ylabel("Days to Expiry")
 		ax1.set_zlabel("Implied Volatility/%")
-		ax1.scatter(x,y,z)
+		ax1.scatter(x,y*365.25,z)
 		plt.show()
 
 def BSMCallValue(S_0, K, r, t, d_1, d_2):

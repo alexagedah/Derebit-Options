@@ -33,6 +33,8 @@ def GetResult(msg):
 			results (DataFrame) : A DataFrame containing the results of the request 
 	"""
 	resp = AsnycLoop(CallAPI, json.dumps(msg))
+	print(pd.read_json(resp))
+	print(pd.read_json(resp).columns)
 	df = pd.read_json(resp).loc[:,"result"]
 	results = pd.DataFrame((list(df.values)))
 	return results
@@ -224,6 +226,9 @@ def TransformOptionsDF(data, currency = "BTC"):
 	return option_contracts
 
 def GetOptions(currency = "BTC"):
-	data = GetRelevantOptionsDF()
-	option_contracts = TransformOptionsDF(data)
+	"""
+		currency (string) : The cryptocurrency you want data for
+	"""
+	data = GetRelevantOptionsDF(currency)
+	option_contracts = TransformOptionsDF(data, currency)
 	return option_contracts
