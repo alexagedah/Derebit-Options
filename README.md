@@ -1,17 +1,17 @@
 # Implied Volatility Surface
-
-The implied volatility surface for Bitcoin on Tuesday 27th September.
-![ImpliedVolatilitySurface](https://user-images.githubusercontent.com/108612856/192565158-d5fe556d-c6ce-4907-a9aa-fb8bee1c624c.png)
-
-The implied volatility of Bitcoin options on the Deribit crypto options and futures exchange. on Tuesday 27th September.
-- The volatility smile can be observed across options
-- There are far OTM options which have very low open interest and very low volume. These have mark prices of 0 therefore their implied volatilities are 0
-![ImpliedVolatilitySurface](https://user-images.githubusercontent.com/108612856/192573938-201fd469-b90b-40d3-95c1-161598ea2cef.png)
-
 - Uses the Deribit API to obtain data on all the options currently trading on the exchange
 - Uses the bisection method to calculate the implied volatility of Bitcoin, Ethereum and Solana options on the Deribit crypto options and futures derivatives exchange. 
 - Uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
 - Plots the implied volatility surface
+
+The implied volatility surface for Bitcoin on Tuesday 27th September.
+![ImpliedVolatilitySurface](https://user-images.githubusercontent.com/108612856/192565158-d5fe556d-c6ce-4907-a9aa-fb8bee1c624c.png)
+
+The implied volatility of Bitcoin options on the Deribit crypto options and futures exchange on Tuesday 27th September.
+![ImpliedVolatility](https://user-images.githubusercontent.com/108612856/192574703-698578d4-8163-4761-b5ba-d8c511c05d41.png)
+- The volatility smile can be observed across options
+- There are far OTM options which have very low open interest and very low volume. These have mark prices of 0 therefore their implied volatilities are 0
+
 
 # TODO/Improvements
 1. On the day of initial testing, model ended up fitting the implied volatility data poorly with an R squared statistic of 0.2! Possible ways to improve the fit are
