@@ -1,8 +1,7 @@
 # Implied Volatility Surface
 - Uses the bisection method to calculate the implied volatility of Bitcoin, Ethereum and Solana options on the Deribit crypto options and futures derivatives exchange. 
-- Uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996) of the options on the Deribit crypto options and futures exchange. 
-- Plots the implied volatility surface for the options.
-
+- Uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
+- Plots the implied volatility surface
 
 # Steps
 - First interact with the Derebit API to get a DataFrame containing information on all the options contracts that are currently trading. Get this DataFrame into the correct format so it can be passed into the OptionsChain constructor.
