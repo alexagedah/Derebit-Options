@@ -1,5 +1,7 @@
 # Implied Volatility Surface
-Uses polynomial regression to estimate the implied determinsic function (Dumas, Fleming and Whaley 1996) for Bitcoin, Ethereum and Solana options on the Deribit crypto options and futures exchange. Plots the implied volatility surface for the options.
+- Uses the bisection method to calculate the implied volatility of Bitcoin, Ethereum and Solana options on the Deribit crypto options and futures derivatives exchange. 
+- Uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996) of the options on the Deribit crypto options and futures exchange. 
+- Plots the implied volatility surface for the options.
 
 
 # Steps
