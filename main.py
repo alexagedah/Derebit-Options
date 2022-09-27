@@ -31,41 +31,11 @@ def CreateImpliedVolSurface(implied_vol_surface_df):
 		)
 	return delta, time_to_expiry, interpolated_iv_surface
 
-def PlotImpVolSurface(options):
-	"""
-	Plots the implied volatility surface for the options
-		Parameters:
-			options (list) : A list containing all the options objects
-		Returns:
 
-	"""
+btc_option_contracts = derebit.GetOptions("BTC")
 
-	vol_surface_df = GetVolSurfaceDF(options)
-	print(vol_surface_df)
-	x, y, z = CreateImpliedVolSurface(vol_surface_df)
-	fig = plt.figure()
-	ax1 = fig.add_subplot(1, 1, 1, projection = "3d")
-	ax1.set_xlabel("Absolute Delta")
-	ax1.set_ylabel("Days to Expiry")
-	ax1.set_zlabel("Implied Volatility/%")
-	ax1.plot_surface(x,y,z)
-	plt.show()
-
-def print_full(x):
-    # pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 2000)
-    pd.set_option('display.float_format', '{:20,.2f}'.format)
-    pd.set_option('display.max_colwidth', None)
-    print(x)
-    # pd.reset_option('display.max_rows')
-    pd.reset_option('display.max_columns')
-    # pd.reset_option('display.width')
-    pd.reset_option('display.float_format')
-    pd.reset_option('display.max_colwidth')
+btc_options_chain = optionschain.OptionsChain(btc_option_contracts)
+btc_options_chain.PlotImpliedVolatility()
+# print_full(btc_options_chain.options_chain_df)
 
 
-option_contracts = derebit.GetOptions()
-
-options_chain = optionschain.OptionsChain(option_contracts)
-print_full(options_chain.options_chain_df)

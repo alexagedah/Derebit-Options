@@ -2,6 +2,7 @@
 This program is for getting a DataFrame containing information on all the options contracts for a
 specific cryptocurrency on the Derebit crypto options exchange
 """
+
 import pandas as pd
 import numpy as np
 import datetime as dt
@@ -189,7 +190,7 @@ def SortOptionsDF(data):
 	"Mark",
 	"24H Vol",
 	"Open Interest"])
-	option_contracts.sort_values(by = "Expiration", inplace = True)
+	option_contracts.sort_values(by = ["Expiration","Type","Strike"], inplace = True)
 	option_contracts.set_index(["Expiration"], inplace = True)
 	return option_contracts
 
