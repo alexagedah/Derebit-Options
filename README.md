@@ -4,7 +4,7 @@
 - Uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
 - Plots the implied volatility surface
 
-The implied volatility surface for Bitcoin on Tuesday 27th September.
+The implied volatility surface for Bitcoin on Tuesday 27th September based on the Dumas, Fleming and Whaley model.
 ![ImpliedVolatilitySurface](https://user-images.githubusercontent.com/108612856/192565158-d5fe556d-c6ce-4907-a9aa-fb8bee1c624c.png)
 
 The implied volatility of Bitcoin options on the Deribit crypto options and futures exchange on Tuesday 27th September.
