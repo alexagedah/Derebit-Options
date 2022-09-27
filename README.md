@@ -21,13 +21,14 @@ The implied volatility of Solana options on the Deribit crypto options and futur
 
 
 # TODO/Improvements
-1. On the day of initial testing, model ended up fitting the implied volatility data poorly with an R squared statistic of ~ 0.2! Possible ways to improve the fit are
+1. Change the options change class so it takes an exchange and an instrument as the input in the constructor and then creates the appropriate OptionsChain object.
+2. On the day of initial testing, model ended up fitting the implied volatility data poorly with an R squared statistic of ~ 0.2! Possible ways to improve the fit are
 - Come up with a way of filtering out options that should not be included in the model (low volume, low open interest, wide spreads etc...)
 - The most important options are the options traded in large volumes (ATM options). Think about weighting the model so it fits these points more closely? 
 - Is this the model we used suitable? Try other machine learning methods to estimate thee implied deterministic function and try different features
-2. Calculate the implied volatility bid and ask and be able to plot the bid, ask and mark implied volatility surface.
-3. Have columns containing the bid, ask and mark price for the underlying contract. This is necessary for when I start trading since the bid/ask is used to value options depending on if you are taking a long market position or short market position.
-4. Binance recently added options. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
+3. Calculate the implied volatility bid and ask and be able to plot the bid, ask and mark implied volatility surface.
+4. Have columns containing the bid, ask and mark price for the underlying contract. This is necessary for when I start trading since the bid/ask is used to value options depending on if you are taking a long market position or short market position.
+5. Binance recently added options. Write a script which can produce a DataFrame containing information on all the options contracts that are currently trading on a certain instrument in the correct format. This can then be passed into the OptionsChain
 constructor (the same can be done with any other platform. Maybe interactive brokers next? This would involve generaling this to dividend paying stocks, American options and knowing how to deterime which risk free rate to use)
-5. Add a feature where we can specify our positioning in each option. We could then have something like the interface of the volcube simulator where we can view our position and overall exposure.
-6. Be able to use a forecast volatility to determine the theoretical value of all the options. We can then compare the theoretical value to the market price and begin options trading!
+6. Add a feature where we can specify our positioning in each option. We could then have something like the interface of the volcube simulator where we can view our position and overall exposure.
+7. Be able to use a forecast volatility to determine the theoretical value of all the options. We can then compare the theoretical value to the market price and begin options trading!
