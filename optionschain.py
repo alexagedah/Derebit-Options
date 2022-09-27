@@ -6,6 +6,10 @@ import datetime as dt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from sklearn.linear_model import LinearRegression
+# from sklearn.metrics import mean_squared_error
+# from sklearn.metrics import r2_score
+
 rel = ["Strike","Type","Mark","Implied Volatility","IV Value"]
 
 def print_full(x):
@@ -46,8 +50,9 @@ class OptionsChain():
 											Implied Volatility (float)
 											IV Value (float) : The theoretical value of the option assuming the implied volatility is correct
 											Implied D1  (float) : The d_1 term in the BSM formula for the value of an option
-											Implied D2 (float) : The d_2 term in the BSM formula for the value of an option											
-			ivsurface (DataFrame) : DataFrame representing the implied volatility surface
+											Implied D2 (float) : The d_2 term in the BSM formula for the value of an option
+			filtered_options_chain_df (DataFrame) : DataFrame containing information about all the options contracts after filtering of OI, volume etc..
+			DumasFlemingWhaleyDVF (function) :  Function to calculate estimate of implied volatility based on Dumas, Fleming and Whalley (1996) model
 		Methods:
 			CalculateTimeToExpiry() : Creates/recalculates the Time to Expiry column
 			CalculateRiskFreeRate() : Creates/recalculates the Risk Free Rate column
@@ -56,6 +61,11 @@ class OptionsChain():
 			CalculateImpliedD12() : Creates/recalculates the Implied D1 and Implied D2 columns
 			CalculateIVValue() : Creates/recalculates the IV Value column
 			CalculateImpliedVolatility() : Creates/recalculates the Implied Volatility column
+
+			FilterOptionsChain() : Creates a DataFrame with options that have been filtered by some criteria
+			CreateDFWDVF() : Creates the Dumas, Fleming and Whalley (1996) implied deterministic volatility function
+
+			PlotImpliedVolatilitySurface() : Produces a plot of the implied volatility surface based on the input implied deterministic volatility function
 			PlotImpliedVolatility() : Produces a 3D plot of the implied volatility of the options
 	"""
 	def __init__(self, options_chain_df):
@@ -73,9 +83,13 @@ class OptionsChain():
 		self.CalculateForwardPrice()
 		self.CalculateLogSimpleMoneyness()
 		self.CalculateImpliedVolatility()
-		writer = pd.ExcelWriter("chain.xlsx")
-		self.options_chain_df.to_excel(writer,"Sheet 1")
-		writer.save()
+		self.FilterOptionsChain()
+		self.CreateDFWDVF()
+		self.PlotImpliedVolatilitySurface()
+
+		# writer = pd.ExcelWriter("chain.xlsx")
+		# self.options_chain_df.to_excel(writer,"Sheet 1")
+		# writer.save()
 
 	def CalculateRiskFreeRate(self):
 		"""
@@ -139,27 +153,53 @@ class OptionsChain():
 				BSMCallValue(S_0, K, r, time_to_expiry, d_1, d_2),
 				BSMPutValue(S_0, K, r, time_to_expiry, d_1, d_2))
 
+	def CreateImpliedVolatilityColumns(self, bi_search_iv_columns, starting_ivs, bi_search_vals_columns):
+		"""
+		Create the columns needed to calculate implied volatility via bisection search
+			Parameters:
+				bi_search_iv_columns (list) : A list containing the column names of the columns which contain the max, mid and min implied volatility
+				starting_iv (list) : A list containing the starting max, mid and min implied volatility for the bisection search procedure
+				bi_search_vals_columns (list) : A list containing the column names of the columns which contain the max, mid and min value of the option based on the
+				max, mid and minimum implied volatility
+		"""
+		for iv_column, starting_iv in zip(bi_search_iv_columns, starting_ivs):
+			self.options_chain_df.loc[:,iv_column] = starting_iv
+		bi_search_vals_columns = ("Max val","Mid val","Min val")
+		for val_column in bi_search_vals_columns:
+			self.options_chain_df.loc[:,val_column] = None
+
+	def BisectionSearchCalculate(self, bi_search_iv_columns, bi_search_vals_columns):
+		"""
+		Calculates the maximum, minimum and mid value of an option based on the maximum, minimum and mid
+		implied volatility.
+			Parameters:
+				bi_search_iv_columns (list) : A list containing the column names of the columns which contain the max, mid and min implied volatility
+				bi_search_vals_columns (list) : A list containing the column names of the columns which contain the max, mid and min value of the option based on the
+				max, mid and minimum implied volatility
+
+		"""
+		for iv_column, val_column in zip(bi_search_iv_columns, bi_search_vals_columns):
+			self.options_chain_df.loc[:,"Implied Volatility"] = self.options_chain_df.loc[:,iv_column]
+			self.CalculateImpliedD12()
+			self.CalculateIVValue()
+			self.options_chain_df.loc[:,val_column] = self.options_chain_df.loc[:,"IV Value"]
+
 	def CalculateImpliedVolatility(self, it = 20):
 		"""
 		Creates/recalculates the Implied Volatility column
 			it (int) : The number of iterations
-		"""		
-		# Create the columns needed to calculate implied volatility via bisection search
+		"""	
+		# The columns containing the maximum, mid and minimum implied volatility
 		bi_search_iv_columns = ["Max IV","Mid IV","Min IV"]
-		starting_ivs = [2,1,0]
-		for iv_column, starting_iv in zip(bi_search_iv_columns, starting_ivs):
-			self.options_chain_df.loc[:,iv_column] = starting_iv
+		# The columns containing the maximum, mid and minimum value of the option based on the respective implied volatility
 		bi_search_vals_columns = ["Max val","Mid val","Min val"]
-		for val_column in bi_search_vals_columns:
-			self.options_chain_df.loc[:,val_column] = None
+		# The starting implied volatility in the search
+		starting_ivs = [2,1,0]
+		self.CreateImpliedVolatilityColumns(bi_search_iv_columns, starting_ivs, bi_search_vals_columns)
 
 		mark = self.options_chain_df.loc[:,"Mark"]
 		for i in range(it):
-			for iv_column, val_column in zip(bi_search_iv_columns, bi_search_vals_columns):
-				self.options_chain_df.loc[:,"Implied Volatility"] = self.options_chain_df.loc[:,iv_column]
-				self.CalculateImpliedD12()
-				self.CalculateIVValue()
-				self.options_chain_df.loc[:,val_column] = self.options_chain_df.loc[:,"IV Value"]
+			self.BisectionSearchCalculate(bi_search_iv_columns, bi_search_vals_columns)
 
 			max_iv = self.options_chain_df.loc[:,"Max IV"]
 			mid_iv = self.options_chain_df.loc[:,"Mid IV"]
@@ -213,8 +253,67 @@ class OptionsChain():
 			self.options_chain_df.loc[:,"Mid IV"] = (self.options_chain_df.loc[:,"Max IV"] + self.options_chain_df.loc[:,"Min IV"])/2
 
 		self.options_chain_df.loc[:,"Implied Volatility"] = self.options_chain_df.loc[:,"Mid IV"]
-
 		self.options_chain_df.drop(columns = (bi_search_iv_columns + bi_search_vals_columns), inplace = True)
+
+	def FilterOptionsChain(self):
+		"""
+		Creates a DataFrame with options that have been filtered by some criteria
+		"""
+		# Create a boolean Series that is true at indexes where implied volatility is below 1%
+		low_iv_mask = self.options_chain_df.loc[:,"Implied Volatility"] <= 0.01
+		self.filtered_options_chain_df = self.options_chain_df.loc[~low_iv_mask,:]
+
+	def CreateDFWDVF(self):
+		"""
+		Creates the Dumas, Fleming and Whalley (1996) implied deterministic volatility function
+		"""
+		strike = self.filtered_options_chain_df.loc[:,"Strike"]
+		time_to_expiry = self.filtered_options_chain_df.loc[:,"Time to Expiry"]
+
+		X = pd.concat([strike, strike**2, time_to_expiry, time_to_expiry**2, strike*time_to_expiry],
+			axis = 1, keys = ["K","K^2","T","T^2","KT"])
+		Y = self.filtered_options_chain_df.loc[:,"Implied Volatility"]
+
+		lin_reg = LinearRegression()
+		lin_reg.fit(X, Y)
+		B0 = lin_reg.intercept_
+		B1, B2, B3, B4, B5 = lin_reg.coef_
+		def DumasFlemingWhaleyDVF(K, T):
+			"""
+			Returns an estimate of the implied volatility of an option based on its
+			strike and time to expiry
+				Parameters:
+					K (float) : The strike of the option
+					T (float) : The time to expiry in days
+				Retuns:
+					dfw_iv (float) : The estimate of the implied volatility of the option
+			"""
+			dfw_iv = B0 + B1*K + B2*(K**2) + B3*T + B4*(T**2) + B5*K*T
+			return dfw_iv
+		self.DumasFlemingWhaleyDVF = DumasFlemingWhaleyDVF
+
+	def PlotImpliedVolatilitySurface(self):
+		"""
+		Produces a plot of the implied volatility surface based on the Dumas, Fleming and Whalley model
+		"""
+		strike_series = self.filtered_options_chain_df.loc[:,"Strike"]
+		time_to_expiry_series = self.filtered_options_chain_df.loc[:,"Time to Expiry"]
+		strikes = np.linspace(strike_series.max(),strike_series.min(),100)
+		time_to_expiries = np.linspace(time_to_expiry_series.min(),time_to_expiry_series.max(),100)
+
+		x, y = np.meshgrid(strikes, time_to_expiries)
+		z1 = self.DumasFlemingWhaleyDVF(x, y)
+		implied_volatility_series = self.filtered_options_chain_df.loc[:,"Implied Volatility"]
+
+		fig = plt.figure()
+		ax1 = fig.add_subplot(1, 1, 1, projection = "3d")
+		ax1.set_title("Implied Volatility Surface")
+		ax1.set_xlabel("Strike")
+		ax1.set_ylabel("Days to Expiry")
+		ax1.set_zlabel("Implied Volatility/%")
+		ax1.plot_surface(x,y,z1*100, color = "blue")
+		# ax1.scatter(strike_series,time_to_expiry_series,implied_volatility_series*100, color = "green")
+		plt.show()
 
 	def PlotImpliedVolatility(self) : 
 		"""
@@ -231,7 +330,6 @@ class OptionsChain():
 		ax1.set_zlabel("Implied Volatility/%")
 		ax1.scatter(x,y,z)
 		plt.show()
-
 
 def BSMCallValue(S_0, K, r, t, d_1, d_2):
 	"""
@@ -264,7 +362,6 @@ def BSMPutValue(S_0, K, r, t, d_1, d_2):
 	"""
 	bsm_put_value = K*np.exp(-r*t)*stats.norm.cdf(-d_2) - S_0*stats.norm.cdf(-d_1)
 	return bsm_put_value
-
 
 
 
