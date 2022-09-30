@@ -7,8 +7,7 @@ Most of the trading on cryptocurrencies is done through spot contracts and perpe
 
 # Results
 Initially, the implied volatility of the options was calculated using the Newton-Rahpson method however in some cases this diverged from the value of implied volatility. To avoid this issue, the bisection method was used. The relationship between the implied volatility of an option and its strike K and time to expiry T was assumed to be
-IV = a + bK + cK^2 + dT + eT^2 + fKT + error_term
-The ordinary least squares method was then used to obtain estimates for the regression coefficients. To asses the quality of fit, the R squared statistic was used. The R squared statistic of the model was 0.2 which is a very poor fit. Possible reasons for a poor fit are
+IV = a + bK + cK^2 + dT + eT^2 + fKT + error_term. The ordinary least squares method was then used to obtain estimates for the regression coefficients. To asses the quality of fit, the R squared statistic was used. The R squared statistic of the model was 0.2 which is a very poor fit. Possible reasons for a poor fit are
 - Cryptocurrencies have far OTM options with very low volume and open interest that are very difficult to trade and have unrealistic implide volatilities. These are also high leverage points therefore have a large effect on the least squares regression line. Come up with a way of filtering out these options that should not be included in the model
 - The most important options are the options traded in large volumes (ATM options). Think about weighting the model so it fits these points more closely? Weighted least squares?
 - Is this the model we used suitable? Are there other independet variables to include? Try other machine learning methods (KNN) to estimate thee implied deterministic function?
