@@ -1,5 +1,6 @@
 # Implied Volatility Surface
-Most of the trading on cryptocurrencies is done through spot contracts and perpetual futures contracts. Options trading is relatively small however I expect it to grow over the coming years. This project involves 1. interacting with the Deribit crypto options and futures derivatives exchange to retrieve the data on the options currently trading
+Most of the trading on cryptocurrencies is done through spot contracts and perpetual futures contracts. Options trading is relatively small however I expect it to grow over the coming years. This gives an opportunity to options traders who can exploit the inefficines that might exist in the early stages of crypto options trading. This project involves
+1. interacting with the Deribit crypto options and futures derivatives exchange to retrieve the data on the options currently trading
 2. calculating the implied volatility of the options useing the bisection method
 3. uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
 4. Plots the implied volatility surface
