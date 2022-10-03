@@ -1,9 +1,9 @@
 # Implied Volatility Surface
 Most of the trading on cryptocurrencies is done through spot contracts and perpetual futures contracts. Options trading is relatively small however I expect it to grow over the coming years. This gives an opportunity to options traders who can exploit the inefficiencies that might exist in the early stages of crypto options trading. This project involves
-1. interacting with the Deribit crypto options and futures derivatives exchange to retrieve the data on the options currently trading
-2. calculating the implied volatility of the options useing the bisection method
-3. uses polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
-4. Plots the implied volatility surface
+1. Interacting with the Deribit crypto options and futures derivatives exchange to retrieve the data on the options currently trading
+2. Calculating the implied volatility of the options using the bisection method
+3. Using polynomial regression to estimate the implied determinsic volatility function (Dumas, Fleming and Whaley 1996)
+4. Plotting the implied volatility surface
 
 # Results
 Initially, the implied volatility of the options was calculated using the Newton-Rahpson method however in some cases this diverged from the value of implied volatility. To avoid this issue, the bisection method was used. The relationship between the implied volatility of an option and its strike K and time to expiry T was assumed to be
